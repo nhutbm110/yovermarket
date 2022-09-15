@@ -1,9 +1,6 @@
 package yoversemarket.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -23,6 +20,7 @@ public class BasePage {
 
     public static ThreadLocal<WebDriver> drivers = new ThreadLocal<>();
 
+    static Cookie cookie;
     static LocalStorage local;
     static Robot robot;
 
@@ -60,12 +58,17 @@ public class BasePage {
 
 //        Tu quet QRcode
         getDriver().get("https://market.yoverse.io/");
+        getDriver().findElement(By.xpath( "//div[text()='Connect Wallet']//parent::button" )).click();
         LocalStorage local = ((WebStorage) getDriver()).getLocalStorage();
 //        local.setItem("token", "\"e09d7326-c8cb-34e0-b379-990e4722ce21\"");
-        local.setItem("walletconnect","{{\"connected\":true,\"accounts\":[\"0x57fdb570cf9ea5569314ffeb85e1e40c3c838862\"],\"chainId\":41000,\"bridge\":\"https://1connect.bshield.io\",\"key\":\"b7d29fea8bf69fd30297c3b9c249f15e39fcf377f356fd8a401f5f40bd11eff5\",\"clientId\":\"deba431e-e9bd-42e4-94a1-a7d9d0c079b5\",\"clientMeta\":{\"description\":\"\",\"url\":\"https://market.yoverse.io\",\"icons\":[\"https://market.yoverse.io/assets/logo/apple-touch-icon.png\",\"https://market.yoverse.io/assets/logo/32x32_png.png\",\"https://market.yoverse.io/assets/logo/16x16_png.png\"],\"name\":\"YoVerse Market\"},\"peerId\":\"0b132450-ce63-4d45-9dbd-f21ab8dd34d7\",\"peerMeta\":{\"description\":\"YoVerse.beta\",\"url\":\"https://wallet.yoverse.io/\",\"icons\":[\"https://walletconnect.org/walletconnect-logo.png\"],\"name\":\"YoVerse.beta\"},\"handshakeId\":1663122178863732,\"handshakeTopic\":\"e45ada16-8280-4130-aca2-3c8dfb9749c8\"}}");
+        local.setItem("walletconnect","{\"connected\":true,\"accounts\":[\"0x57fdb570cf9ea5569314ffeb85e1e40c3c838862\"],\"chainId\":41000,\"bridge\":\"https://1connect.bshield.io\",\"key\":\"14eeaa32643feb98e2270c6142a8e47ec03398779e42fefca168e9c9450af8a2\",\"clientId\":\"deba431e-e9bd-42e4-94a1-a7d9d0c079b5\",\"clientMeta\":{\"description\":\"\",\"url\":\"https://market.yoverse.io\",\"icons\":[\"https://market.yoverse.io/assets/logo/apple-touch-icon.png\",\"https://market.yoverse.io/assets/logo/32x32_png.png\",\"https://market.yoverse.io/assets/logo/16x16_png.png\"],\"name\":\"YoVerse Market\"},\"peerId\":\"005b3bcd-ae34-4421-882a-9bc4e5f862fa\",\"peerMeta\":{\"description\":\"YoVerse.beta\",\"url\":\"https://wallet.yoverse.io/\",\"icons\":[\"https://walletconnect.org/walletconnect-logo.png\"],\"name\":\"YoVerse.beta\"},\"handshakeId\":1663138159843770,\"handshakeTopic\":\"895affe8-b052-4295-b552-91f44abf4fd6\"}");
+        Cookie cookie1 = new Cookie( "yoversemarket","" );
+        Cookie cookie2 = new Cookie( "rf_yoversemarket","" );
+        getDriver().manage().addCookie( cookie1 );
+        getDriver().manage().addCookie( cookie2 );
         getDriver().get("https://market.yoverse.io/");
-
     }
+
     public static WebDriver getDriver()
     {
         return drivers.get();
@@ -90,10 +93,6 @@ public class BasePage {
         getDriver().get("https://market.yoverse.io/");
         return new PlaceOnMarketPage();
     }
-
-
-
-
 
     public boolean isAttributePresent(By ele, String attr) {
         boolean result = false;

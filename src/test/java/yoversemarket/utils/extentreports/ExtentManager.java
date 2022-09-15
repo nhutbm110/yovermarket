@@ -9,7 +9,7 @@ public class ExtentManager {
         ExtentSparkReporter reporter = new ExtentSparkReporter("./extent-reports/extent-report.html");
         reporter.config().setReportName("Extent Report");
         extentReports.attachReporter(reporter);
-        extentReports.setSystemInfo("YoVerse Wallet", "WalletWeb");
+        extentReports.setSystemInfo("YoVerse", "MarketPlace");
         extentReports.setSystemInfo("Author", "NhutBM");
         return extentReports;
     }

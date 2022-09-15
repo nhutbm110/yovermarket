@@ -8,7 +8,7 @@ public class PlaceOnMarketTest extends BaseTest {
 
 //    @Test
     public void TC1_OpenPageOwned() throws InterruptedException, AWTException {
-        placeOnMarketPage.clickMyMenuAccount();
+        placeOnMarketPage.clickMyMenuAccount("nhutbm");
         placeOnMarketPage.clickMyProfile();
         placeOnMarketPage.clickTabOwned();
         placeOnMarketPage.selectNFT("354");
@@ -24,7 +24,7 @@ public class PlaceOnMarketTest extends BaseTest {
     }
     @Test
     public void TC2_Timed_Auction() throws InterruptedException, AWTException {
-        placeOnMarketPage.clickMyMenuAccount();
+        placeOnMarketPage.clickMyMenuAccount("nhutbm");
         placeOnMarketPage.clickMyProfile();
         placeOnMarketPage.clickTabOwned();
         placeOnMarketPage.selectNFT("228");
