@@ -53,6 +53,7 @@ public class TestListener extends BasePage implements ITestListener {
         //ExtentReports log and screenshot operations for failed tests.
         getTest().log(Status.FAIL, "Test Failed",
                 getTest().addScreenCaptureFromBase64String(base64Screenshot).getModel().getMedia().get(0));
+//        getTest().log(Status.FAIL,"Stack Trace",iTestResult.getThrowable());
     }
     @Override
     public void onTestSkipped(ITestResult iTestResult) {

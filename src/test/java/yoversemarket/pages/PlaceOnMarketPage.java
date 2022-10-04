@@ -1,25 +1,44 @@
 package yoversemarket.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.html5.LocalStorage;
+import org.openqa.selenium.html5.WebStorage;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import yoversemarket.utils.AccountManager;
 
 import java.awt.*;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PlaceOnMarketPage extends BasePage {
 
-    By myProfile = By.xpath("//button[contains(text(),'Profile')]");
+    By myProfile = By.xpath("//div[contains(text(),'Profile')]/parent::button");
     By tabOwned = By.xpath("//div[@id='tab-1']");
-//    By menuAccount = By.xpath("//img[@alt='0x76fF17']//parent::div");
-    String menuAccount = "//img[@alt='%s']//parent::div";
+    By menuAccount = By.xpath("//div[@id='header-profile-avatar']");
+
+    By tabCollections = By.xpath("//div[@role='tablist']//button[contains(text(),'Collection')]");
+    By menuExplore = By.xpath("//div[text()='Explore']/parent::*");
     By tabOnMarket = By.xpath("//button[contains(text(),'Market')]");
-    String listNFT = "//h2[contains(.,'230')]//parent::a";
+//    String listNFT = "//h2[contains(.,'%s')]//parent::a";
+    String listNFT = "//div[contains(text(),'%s')]//parent::a";
+    String listCollections = "//a[text()='%s']/parent::div";
+    By logoBottom = By.xpath("//img[contains(@src,'assets/images/market_white_svg.svg')]");
+    By priceListNFT= By.xpath("//div[contains(@id,'nft-card-price' ) and text()='Price']//following-sibling::div");
     By bttNFTDetailPlaceOnMarket = By.xpath("//button[@type='button' and contains(text(),'Place')]");
-    By fieldDuration = By.xpath("//div[@role='group']");
+    By fieldDurationFixedPrice = By.xpath("//div[@id='fixed-price-duration']");
+    By fieldDurationTimedAuction = By.xpath("//div[@id='timed-auction-duration']");
     By dropdownDateRange = By.xpath("//div[contains(text(),'Date')]//following-sibling::div");
-    String listValueDateRange = "//div[contains(text(),'%s')]";
+    String listValueDateRange = "//div[contains(text(),'%s')]/parent::button";
     By confirmDateRange = By.xpath("//button[@type='button' and contains(text(),'Confirm')]");
     By dropdownPrice = By.xpath("//button[@id='menu-button-price-token']");
     By dropdownPriceTokenStar = By.xpath("//button[@data-index='0']");
     By dropdownPriceTokenYove = By.xpath("//button[@data-index='1']");
+    By txtFixedAmount = By.xpath("//input[@id='fixed-price-amount']");
     By txtAmount = By.xpath("//input[@id='price-amount']");
     By bttSaleBidPlaceOnMarket = By.xpath("//div[contains(text(),'Place')]/parent::button");
     By timeAuction = By.xpath("//button[@id='timed-auction']");
@@ -31,6 +50,93 @@ public class PlaceOnMarketPage extends BasePage {
 //    By toggleOptionBuyNow = By.cssSelector( "input#switch-buy-now");
     By toggleOptionBuyNow = By.xpath("//input[@id='switch-buy-now']//following-sibling::span");
     By amountBuyNow = By.xpath("//input[@id='buy-now-amount']");
+    By durationChooseYear = By.xpath("//div[@class='react-calendar']//button[contains(@class,'react-calendar__navigation__label')]");
+    String durationChooseMonth = "//abbr[contains(text(),'%s')]/parent::button";
+    String durationChooseDay = "//abbr[contains(text(),'%s')]/parent::button";
+    By dropdownSort = By.xpath("//div[contains(@class,'css-xxul')]");
+    String listItemDropdownSort = "//div[contains(text(),'%s')]/parent::button";
+
+
+
+    public void clickDropdownSort()
+    {
+        waitForElementPresent(dropdownSort);
+        waitForElementClickable(dropdownSort);
+        getDriver().findElement(dropdownSort).click();
+    }
+
+    public void selectItemDropdownSort(String value) throws InterruptedException {
+        listItemDropdownSort = String.format(listItemDropdownSort,value);
+        Thread.sleep( 500 );
+        getDriver().findElement(By.xpath(listItemDropdownSort)).click();
+//        waitForElementClickable( logoBottom );
+//        scrollDownBottomByJS(getDriver().findElement( logoBottom ));
+    }
+
+    public void selectMonthPopupDuration(String value) throws InterruptedException {
+        durationChooseMonth = String.format(durationChooseMonth,value);
+        Thread.sleep( 500 );
+        getDriver().findElement(By.xpath(durationChooseMonth)).click();
+    }
+
+    public void selectDayPopupDuration(String value) throws InterruptedException {
+        durationChooseDay = String.format(durationChooseDay,value);
+        Thread.sleep( 500 );
+        getDriver().findElement(By.xpath(durationChooseDay)).click();
+    }
+
+    public void selectYearPopupDuration()
+    {
+        waitForElementPresent(durationChooseYear);
+        waitForElementClickable(durationChooseYear);
+        getDriver().findElement(durationChooseYear).click();
+    }
+
+    public List<String> getPriceListNFT() throws InterruptedException {
+        waitForElementPresent(priceListNFT);
+        List<String> array = new ArrayList<String>();
+//        wait.until( ExpectedConditions.visibilityOfElementLocated(priceListNFT));
+        waitForElementPresent(priceListNFT);
+         List<WebElement> elements  = getDriver().findElements(priceListNFT);
+//            for (int i = 0; i < elements.size(); i++)
+////            {
+//////                String data = getDriver().findElement(priceListNFT).getText();
+//////                array.add(data);
+////                array.add(elements.get(i).getText());
+////            }
+
+            elements.forEach( element -> array.add(element.getText()));
+         return array;
+    }
+
+
+
+
+    public PlaceOnMarketPage loginAsPlaceOnMarket(AccountManager accountManager) {
+        usingLocalStorage(accountManager);
+        usingCookie(accountManager);
+        getDriver().get( urlmarket );
+        return new PlaceOnMarketPage();
+    }
+
+    public void clickMenuExplore()
+    {
+        waitForElementPresent(menuExplore);
+        getDriver().findElement(menuExplore).click();
+    }
+
+    public void clickTabCollections()
+    {
+        waitForElementPresent(tabCollections);
+        waitForElementClickable(tabCollections);
+        getDriver().findElement(tabCollections).click();
+    }
+
+    public void selectCollection(String value) throws InterruptedException {
+        listCollections = String.format(listCollections,value);
+        Thread.sleep( 500 );
+        getDriver().findElement(By.xpath(listCollections)).click();
+    }
 
     public void inputAmountBuyNow(String value)
     {
@@ -98,6 +204,13 @@ public class PlaceOnMarketPage extends BasePage {
         getDriver().findElement(txtAmount).sendKeys( value );
     }
 
+    public void inputFixedAmount(String value)
+    {
+        waitForElementPresent(txtFixedAmount);
+        getDriver().findElement(txtFixedAmount).clear();
+        getDriver().findElement(txtFixedAmount).sendKeys( value );
+    }
+
     public void clickDropDownToken()
     {
         waitForElementPresent(dropdownPrice);
@@ -133,11 +246,18 @@ public class PlaceOnMarketPage extends BasePage {
         getDriver().findElement(By.xpath(listValueDateRange)).click();
     }
 
-    public void clickFieldDuration()
+    public void clickFieldDurationFixedPrice()
     {
-        waitForElementPresent(fieldDuration);
-        getDriver().findElement(fieldDuration).click();
+        waitForElementPresent(fieldDurationFixedPrice);
+        getDriver().findElement(fieldDurationFixedPrice).click();
     }
+
+    public void clickFieldDurationTimedAuction()
+    {
+        waitForElementPresent(fieldDurationTimedAuction);
+        getDriver().findElement(fieldDurationTimedAuction).click();
+    }
+
     public void clickNFTDetailPlaceOnMarket() throws InterruptedException {
         waitForElementPresent(bttNFTDetailPlaceOnMarket);
         Thread.sleep( 500 );
@@ -149,27 +269,19 @@ public class PlaceOnMarketPage extends BasePage {
 //        robotScrollDown();
         getDriver().findElement(By.xpath(listNFT)).click();
     }
-    public void clickMyMenuAccount(String value) throws InterruptedException {
-        menuAccount = String.format( menuAccount,value );
-        Thread.sleep( 500 );
-        getDriver().findElement( By.xpath( menuAccount ) ).click();
+    public void clickMyMenuAccount(){
+//        menuAccount = String.format( menuAccount,value );
+        waitForElementPresent( menuAccount );
+        getDriver().findElement( menuAccount ).click();
     }
     public void clickMyProfile()
     {
         waitForElementPresent(myProfile);
         getDriver().findElement(myProfile).click();
     }
-    public void clickTabOwned() throws InterruptedException, AWTException {
-//        waitForElementPresent(tabOnMarket);
-//        Thread.sleep( 5000 );
-//        scrollByAction( getDriver().findElement(tabOnMarket) );
-//        robotScrollDown();
-//        Thread.sleep( 3000 );
+    public void clickTabOwned() throws InterruptedException {
         waitForElementPresent(tabOwned);
         waitForElementClickable(tabOwned);
-//        scrollByJS( getDriver().findElement(tabOwned));
-//        scrollByAction( getDriver().findElement( tabOwned ) );
         getDriver().findElement(tabOwned).click();
     }
-
 }
